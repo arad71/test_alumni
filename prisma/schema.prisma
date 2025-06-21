@@ -1,1 +1,30 @@
-// Prisma schema for users, events, and registrations
+model User {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  password    String
+  graduation  String?
+  department  String?
+  role        String   @default("member")
+  createdAt   DateTime @default(now())
+  registrations Registration[]
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  date        DateTime
+  location    String
+  price       Float
+  registrations Registration[]
+}
+
+model Registration {
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String
+  event    Event    @relation(fields: [eventId], references: [id])
+  eventId  String
+  payment  Boolean  @default(false)
+}
